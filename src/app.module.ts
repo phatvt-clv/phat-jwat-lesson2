@@ -4,7 +4,7 @@ import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
-import { EmployeesModule } from './modules/employees/employees.module';
+import { EmployeesModule } from './employees/employees.module';
 
 @Module({
   imports: [
@@ -16,10 +16,8 @@ import { EmployeesModule } from './modules/employees/employees.module';
       username: process.env.PG_USER,
       password: process.env.PG_PASSWORD,
       database: process.env.PG_DB,
-      entities: [__dirname + '/**/*.entity{.ts,.js}'],
-
-      // DO NOT SET IN REAL PROJECT
-      synchronize: false
+      entities: ['dist/**/*.entity{.ts,.js}'],
+      synchronize: true
     }),
     EmployeesModule
   ],
