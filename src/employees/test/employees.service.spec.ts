@@ -55,7 +55,7 @@ describe('EmployeeService', () => {
       expect(result).toEqual([mockEmployee]);
     });
 
-    it('should return employee with email is provided', async () => {
+    it('should return employee with name is provided', async () => {
       const result = await employeeService.findAll(undefined, undefined, mockName);
       expect(employeeRepository.find).toHaveBeenCalled();
       expect(result).toEqual([mockEmployee]);

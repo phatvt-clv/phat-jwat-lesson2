@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, NotFoundException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, NotFoundException, ParseUUIDPipe } from '@nestjs/common';
 import { EmployeesService } from './employees.service';
 import { CreateEmployeeDto } from './dto/create-employee.dto';
 import { UpdateEmployeeDto } from './dto/update-employee.dto';
@@ -27,6 +27,14 @@ export class EmployeesController {
     return employees;
   }
 
+  @Get(':id')
+  async getEmployeeById(
+    @Param('id', ParseUUIDPipe) id: string
+  ): Promise<Employee> {
+    const employees = await this.employeesService.getEmployeeById(id);
+    return employees;
+  }
+
   @Patch(':id')
   async updateEmployee(
     @Param('id') id: string, 
@@ -37,7 +45,7 @@ export class EmployeesController {
   }
 
   @Delete(':id')
-  async deleteEmployee(@Param('id') id: string): Promise<boolean> {
+  async deleteEmployee(@Param('id') id: string): Promise<Employee> {
     return await this.employeesService.delete(id);
   }
 }

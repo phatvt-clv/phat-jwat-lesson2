@@ -1,9 +1,10 @@
 import { IsEmail, IsNumber, MinLength } from "class-validator";
 
 export class CreateEmployeeDto {
-    @MinLength(1, {message: "Name must be longer than or equal to 1 characters"})
+    @MinLength(1, {message: "Name is not empty"})
     readonly name?: string;
 
+    @MinLength(1, {message: 'Email is not empty'})
     @IsEmail({}, {message: 'Email is invalid'})
     readonly email?: string;
 
@@ -16,5 +17,6 @@ export class CreateEmployeeDto {
     @IsNumber({}, {message: 'Allowance must be a number'})
     readonly allowance?: number;
 
+    @MinLength(1, {message: 'Phone number is not empty'})
     readonly phone?: string;
 }  

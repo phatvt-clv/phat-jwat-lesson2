@@ -1,9 +1,10 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException, Param } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ILike, Repository } from 'typeorm';
 import { CreateEmployeeDto } from './dto/create-employee.dto';
 import { UpdateEmployeeDto } from './dto/update-employee.dto';
 import { Employee } from './entities/employee.entity';
+import { validate as isValidUUID } from 'uuid';
 
 @Injectable()
 export class EmployeesService {
@@ -28,7 +29,20 @@ export class EmployeesService {
     return await this.employeeRepository.find({where: conditions});
   }
 
+  async getEmployeeById(
+    @Param('id') id: string
+  ): Promise<Employee> {
+    const employees = await this.employeeRepository.findOne({where: {employeeId : id}});
+    if (!employees) {
+      throw new NotFoundException(`Can't find any employee`);
+    }
+    return employees;
+  }
+
   async update(id: string, updateEmployeeDto: UpdateEmployeeDto): Promise<Employee> {
+    if(!isValidUUID(id))
+      throw new NotFoundException('Employee is not found');
+
     const employee = await this.employeeRepository.findOne({where: {employeeId: id}});
 
     if (!employee)
@@ -49,16 +63,18 @@ export class EmployeesService {
     }
   }
 
-  async delete(id: string): Promise<boolean> {
+  async delete(id: string): Promise<Employee> {
+    if(!isValidUUID(id))
+      throw new NotFoundException('Employee is not found');
     const film = await this.employeeRepository.findOne({where: {employeeId: id}});
     if (!film) {
-      throw new NotFoundException('The employee is not found');
+      throw new NotFoundException('Employee is not found');
     }
     try {
       await this.employeeRepository.softDelete(id);
-      return true;
+      return film;
     } catch (error) {
-      return false;
+      throw new BadRequestException(`Can't delete employee`);
     }
   }
 }

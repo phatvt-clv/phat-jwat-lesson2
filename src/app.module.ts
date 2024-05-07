@@ -16,8 +16,7 @@ import { EmployeesModule } from './employees/employees.module';
       username: process.env.PG_USER,
       password: process.env.PG_PASSWORD,
       database: process.env.PG_DB,
-      entities: ['dist/**/*.entity{.ts,.js}'],
-      synchronize: true
+      entities: ['dist/**/*.entity{.ts,.js}']
     }),
     EmployeesModule
   ],
