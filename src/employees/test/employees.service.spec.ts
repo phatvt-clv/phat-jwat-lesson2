@@ -111,6 +111,8 @@ describe('EmployeeService', () => {
 
   describe('delete an employee in service', () => {
     it('delete an employee with id', async () => {
+      mockEmployeeRepository.findOne.mockResolvedValue(mockEmployee);
+      
       const result = await employeeService.delete(mockId);
       expect(employeeRepository.findOne).toHaveBeenCalled();
       expect(employeeRepository.findOne).toHaveBeenCalledWith({
@@ -118,7 +120,7 @@ describe('EmployeeService', () => {
       });
       expect(employeeRepository.softDelete).toHaveBeenCalledTimes(1);
       expect(employeeRepository.softDelete).toHaveBeenCalledWith(mockId);
-      expect(result).toEqual(true);
+      expect(result).toEqual(mockEmployee);
     });
 
     it('delete an employee with wrong id', async () => {
@@ -128,7 +130,7 @@ describe('EmployeeService', () => {
       }    
       expect(employeeRepository.findOne).toHaveBeenCalled();
       expect(employeeRepository.findOne).toHaveBeenCalledWith({where: { employeeId : mockWrongId }});
-      await expect(result()).rejects.toThrow(new NotFoundException('The employee is not found'));
+      await expect(result()).rejects.toThrow(new NotFoundException('Employee is not found'));
     });
   });
 });
